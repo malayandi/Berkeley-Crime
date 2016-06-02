@@ -6,7 +6,7 @@ data <- read.csv("/Users/drpalan/Desktop/Subu/Berkeley-Crime/Data/raw_data.csv")
 
 # remove unnecessary variables
 data_trimmed <- data %>%
-  select(date = EVENTDT, day = CVDOW, time = EVENTTM, type = OFFENSE, location = Block_Location) 
+  select(date = EVENTDT, day = CVDOW, time = EVENTTM, type = OFFENSE, location = Block_Location, address = BLKADDR) 
 
 # duplicate trimmed data table
 data_clean <- data_trimmed
