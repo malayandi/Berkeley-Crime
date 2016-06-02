@@ -24,6 +24,32 @@ data_clean$time <- as.numeric(hour(as.POSIXct(data_clean$time, format = "%H:%M")
 # remove cases without coordinates for location of the crime
 data_clean <- data_clean[(grepl("[0-9]+\\.[0-9]+\\, -[0-9]+\\.[0-9]+", data_clean$location)),]
 
+# split the "address" variable into, "block_number", the block number and "street1", the street name if the block number is available
+# or into "street1" and "street2", the name of the cross-street, otherwise. (The other column will contain NA)
+add <- data_clean$address
+block_number <- vector(mode = "numeric", length = nrow(data_clean))
+street1 <- vector(mode = "character", length = nrow(data_clean))
+street2 <- vector(mode = "character", length = nrow(data_clean))
+
+for (i in 1:nrow(data_clean)) {
+  if (grepl("[0-9]", add[i])) {
+    lst <- unlist(str_split(add[i], " ", 2))
+    block_number[i] <- lst[1]
+    street1[i] <- lst[2]
+    street2[i] <- NA
+  } else {
+    lst <- unlist(str_split(add[i], " & ", 2))
+    block_number[i] <- NA
+    street1[i] <- lst[1]
+    street2[i] <- lst[2]
+  }
+}
+
+data_clean$block_number <- block_number
+data_clean$street1 <- street1
+data_clean$street2 <- street2
+data_clean$address <- NULL
+
 # extract coordinates of the crime from the "location" variable, storing them into two new variables, "lat" and "long"
 coord <- unlist(str_extract_all(data_clean$location, "([0-9]+\\.[0-9]+)\\, -[0-9]+\\.[0-9]+"))
 coord <- strsplit(coord, ", ")
