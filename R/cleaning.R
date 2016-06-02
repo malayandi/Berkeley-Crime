@@ -2,7 +2,7 @@
 library(DataComputing)
 
 # importing data from local source
-data <- read.csv("/Users/drpalan/Desktop/Subu/Berkeley-Crime/Data/raw_data.csv")
+data <- read.csv("~/Desktop/Subu/Berkeley-Crime/Data/raw_data.csv")
 
 # remove unnecessary variables
 data_trimmed <- data %>%
@@ -49,6 +49,10 @@ data_clean$block_number <- block_number
 data_clean$street1 <- street1
 data_clean$street2 <- street2
 data_clean$address <- NULL
+
+# creates a file containing the addresses and saves it locally
+addresses <- data.frame(block_number, street1, street2)
+write.csv(addresses, "~/Desktop/Subu/Berkeley-Crime/Data/addresses.csv")
 
 # extract coordinates of the crime from the "location" variable, storing them into two new variables, "lat" and "long"
 coord <- unlist(str_extract_all(data_clean$location, "([0-9]+\\.[0-9]+)\\, -[0-9]+\\.[0-9]+"))
@@ -104,4 +108,4 @@ data_clean$x <- NULL
 data_clean$y <- NULL
 
 # save cleaned data file locally
-write.csv(data_clean, "/Users/drpalan/Desktop/Subu/Berkeley-Crime/Data/clean_data.csv")
+write.csv(data_clean, "~/Desktop/Subu/Berkeley-Crime/Data/clean_data.csv")
